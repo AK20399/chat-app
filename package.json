@@ -1,17 +1,29 @@
 {
-  "name": "chat-app",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Aakash K Darji",
-  "license": "MIT",
-  "dependencies": {
-    "express": "^4.17.3"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.15"
-  }
+    "name": "chat-app",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "dev": "nodemon src/index.js",
+        "format:check": "prettier --check src/*",
+        "format:write": "prettier --write src/*",
+        "lint:check": "eslint src/*",
+        "lint:fix": "eslint --fix src/*",
+        "prepare": "husky install"
+    },
+    "author": "Aakash K Darji",
+    "license": "MIT",
+    "dependencies": {
+        "express": "^4.17.3"
+    },
+    "devDependencies": {
+        "eslint": "^8.10.0",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-import": "^2.25.4",
+        "husky": "^7.0.4",
+        "nodemon": "^2.0.15",
+        "prettier": "^2.5.1"
+    }
 }
