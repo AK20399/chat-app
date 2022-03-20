@@ -6,11 +6,19 @@
     "type": "module",
     "scripts": {
         "dev": "nodemon src/index.js",
-        "format:check": "prettier --check src/*",
-        "format:write": "prettier --write src/*",
-        "lint:check": "eslint src/*",
-        "lint:fix": "eslint --fix src/*",
         "prepare": "husky install"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "lint-staged": {
+        "src/**/*.{js,jsx,ts,tsx,json,css}": [
+            "prettier --write",
+            "eslint --fix src/",
+            "git add"
+        ]
     },
     "author": "Aakash K Darji",
     "license": "MIT",
@@ -24,6 +32,7 @@
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-import": "^2.25.4",
         "husky": "^7.0.4",
+        "lint-staged": "^12.3.7",
         "nodemon": "^2.0.15",
         "prettier": "^2.5.1"
     }
