@@ -13,26 +13,31 @@ const server = http.createServer(app)
 const io = new Server(server)
 
 io.on('connection', (socket) => {
-
     // welcome message
-    socket.emit("message", "Welcome Tiktoker!")
+    socket.emit('message', 'Welcome Tiktoker!')
 
     // send joined message except current user
     socket.broadcast.emit('message', 'Yay, A new tiktoker joined')
 
     // send message to every user
-    socket.on("sendMessage", (message) => {
+    socket.on('sendMessage', (message) => {
         io.emit('message', message)
     })
 
     // send location to all users
     socket.on('sendLocation', (location) => {
-        io.emit('message', `https://google.com/maps?q=${location.latitude},${location.longitude}`)
+        io.emit(
+            'message',
+            `https://google.com/maps?q=${location.latitude},${location.longitude}`
+        )
     })
 
     // send disconnected message
     socket.on('disconnect', () => {
-        socket.broadcast.emit('message', 'Oops tiktoker left our precious group')
+        socket.broadcast.emit(
+            'message',
+            'Oops tiktoker left our precious group'
+        )
     })
 })
 
@@ -41,7 +46,6 @@ const port = process.env.PORT || 3000
 const publicDirectoryPath = path.join(__dirname, '../public')
 
 app.use(express.static(publicDirectoryPath))
-
 
 app.get('/', (req, res) => {
     res.send('index.html')
