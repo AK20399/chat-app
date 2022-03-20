@@ -1,12 +1,22 @@
-<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat app</title>
-</head>
-<body>
-    Chat app
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Chat app</title>
+    </head>
+    <body>
+        Chat app <br /><br />
+        <form id="sendMessageForm">
+            <input type="text" name="message" placeholder="Enter message" />
+            <button type="submit">Send</button> <br />
+        </form>
+        <button id="sendLocationID">Send location</button><br /><br />
+        Here are your messages
+        <br /><br />
+        <div id="messagesID"></div>
+
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/js/chat.js"></script>
+    </body>
 </html>
