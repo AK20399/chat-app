@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url'
 import http from 'http'
 
 import { Server } from 'socket.io'
+import BadWords from 'bad-words'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -20,16 +21,25 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('message', 'Yay, A new tiktoker joined')
 
     // send message to every user
-    socket.on('sendMessage', (message) => {
+    socket.on('sendMessage', (message, callback) => {
+        const filter = new BadWords()
+
+        if (filter.isProfane(message)) {
+            return callback('profanity not allowed')
+        }
         io.emit('message', message)
+        callback()
+        return ''
     })
 
     // send location to all users
-    socket.on('sendLocation', (location) => {
+    socket.on('sendLocation', (location, callback) => {
         io.emit(
             'message',
             `https://google.com/maps?q=${location.latitude},${location.longitude}`
         )
+        // callback('something went wrong')
+        callback()
     })
 
     // send disconnected message

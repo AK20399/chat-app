@@ -23,8 +23,8 @@
   integrity sha512-ObyMyWxZiCu/yTisA7uzx81s40xR2fD5Cg/2Kq7G02ajkNubJf6BopgDTmDyc3U7sXpNKM8cYOw7s7Tyr+DnCw==
   dependencies:
     "@humanwhocodes/object-schema" "^1.2.1"
-    "debug" "^4.1.1"
-    "minimatch" "^3.0.4"
+    debug "^4.1.1"
+    minimatch "^3.0.4"
 
 "@humanwhocodes/object-schema@^1.2.1":
   version "1.2.1"
@@ -46,22 +46,7 @@
   resolved "https://registry.npmjs.org/@szmarczak/http-timer/-/http-timer-1.1.2.tgz"
   integrity sha512-XIB2XbzHTN6ieIjfIMV9hlVcfPU26s2vafYWQcZHWXHOxiaRZYEDKEwdl129Zyg50+foYV2jCgtrqSA6qNuNSA==
   dependencies:
-    "defer-to-connect" "^1.0.1"
-
-"@types/component-emitter@^1.2.10":
-  "integrity" "sha512-SRXjM+tfsSlA9VuG8hGO2nft2p8zjXCK1VcC6N4NXbBbYbSia9kzCChYQajIjzIqOOOuh5Ock6MmV2oux4jDZQ=="
-  "resolved" "https://registry.npmjs.org/@types/component-emitter/-/component-emitter-1.2.11.tgz"
-  "version" "1.2.11"
-
-"@types/cookie@^0.4.1":
-  "integrity" "sha512-XW/Aa8APYr6jSVVA1y/DEIZX0/GMKLEVekNG727R8cs56ahETkRAy/3DR7+fJyh7oUgGwNQaRfXCun0+KbWY7Q=="
-  "resolved" "https://registry.npmjs.org/@types/cookie/-/cookie-0.4.1.tgz"
-  "version" "0.4.1"
-
-"@types/cors@^2.8.12":
-  "integrity" "sha512-vt+kDhq/M2ayberEtJcIN/hxXy1Pk+59g2FV/ZQceeaTyCtCucjL2Q7FXlFjtWn4n15KCr1NE2lNNFhp0lEThw=="
-  "resolved" "https://registry.npmjs.org/@types/cors/-/cors-2.8.12.tgz"
-  "version" "2.8.12"
+    defer-to-connect "^1.0.1"
 
 "@types/component-emitter@^1.2.10":
   version "1.2.11"
@@ -207,6 +192,18 @@ astral-regex@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/astral-regex/-/astral-regex-2.0.0.tgz"
   integrity sha512-Z7tMw1ytTXt5jqMcOP+OQteU1VuNK9Y02uuJtKQ1Sv69jXQKKg5cibLwGJow8yzZP+eAc18EmLGPal0bp36rvQ==
+
+bad-words@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/bad-words/-/bad-words-3.0.4.tgz#044c83935c4c363a905d47b5e0179f7241fecaec"
+  integrity sha512-v/Q9uRPH4+yzDVLL4vR1+S9KoFgOEUl5s4axd6NIAq8SV2mradgi4E8lma/Y0cw1ltVdvyegCQQKffCPRCp8fg==
+  dependencies:
+    badwords-list "^1.0.0"
+
+badwords-list@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/badwords-list/-/badwords-list-1.0.0.tgz#5e9856dbf13482a295c3b0b304afb9d4cfc5c579"
+  integrity sha1-XphW2/E0gqKVw7CzBK+51M/FxXk=
 
 balanced-match@^1.0.0:
   version "1.0.2"
@@ -1320,15 +1317,8 @@ is-regex@^1.1.4:
   resolved "https://registry.npmjs.org/is-regex/-/is-regex-1.1.4.tgz"
   integrity sha512-kvRdxDsxZjhzUX07ZnLydzS1TU/TJlTUHHY4YLL87e37oUA49DfkLqgy+VjFocowy29cKvcSiu+kIv728jTTVg==
   dependencies:
-    "lowercase-keys" "^1.0.0"
-
-"restore-cursor@^3.1.0":
-  "integrity" "sha512-l+sSefzHpj5qimhFSE5a8nufZYAM3sBSVMAPtYkmC+4EH2anSGaEMXSD0izRQbu9nfyQ9y5JrVmp7E8oZrUjvA=="
-  "resolved" "https://registry.npmjs.org/restore-cursor/-/restore-cursor-3.1.0.tgz"
-  "version" "3.1.0"
-  dependencies:
-    "onetime" "^5.1.0"
-    "signal-exit" "^3.0.2"
+    call-bind "^1.0.2"
+    has-tostringtag "^1.0.0"
 
 is-shared-array-buffer@^1.0.1:
   version "1.0.1"
