@@ -5,6 +5,8 @@ import http from 'http'
 
 import { Server } from 'socket.io'
 import BadWords from 'bad-words'
+// eslint-disable-next-line import/extensions
+import { generateMessage } from './utils/messages.mjs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -15,10 +17,13 @@ const io = new Server(server)
 
 io.on('connection', (socket) => {
     // welcome message
-    socket.emit('message', 'Welcome Tiktoker!')
+    socket.emit('message', generateMessage('Welcome Tiktoker!'))
 
     // send joined message except current user
-    socket.broadcast.emit('message', 'Yay, A new tiktoker joined')
+    socket.broadcast.emit(
+        'message',
+        generateMessage('Yay, A new tiktoker joined')
+    )
 
     // send message to every user
     socket.on('sendMessage', (message, callback) => {
@@ -27,7 +32,7 @@ io.on('connection', (socket) => {
         if (filter.isProfane(message)) {
             return callback('profanity not allowed')
         }
-        io.emit('message', message)
+        io.emit('message', generateMessage(message))
         callback()
         return ''
     })
@@ -35,8 +40,10 @@ io.on('connection', (socket) => {
     // send location to all users
     socket.on('sendLocation', (location, callback) => {
         io.emit(
-            'message',
-            `https://google.com/maps?q=${location.latitude},${location.longitude}`
+            'locationMessage',
+            generateMessage(
+                `https://google.com/maps?q=${location.latitude},${location.longitude}`
+            )
         )
         // callback('something went wrong')
         callback()
@@ -46,7 +53,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         socket.broadcast.emit(
             'message',
-            'Oops tiktoker left our precious group'
+            generateMessage('Oops tiktoker left our precious group')
         )
     })
 })

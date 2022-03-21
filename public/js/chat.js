@@ -3,14 +3,17 @@
 // eslint-disable-next-line no-undef
 const socket = io()
 
-const messages = []
-
 // ELEMENTS
 const $messageForm = document.querySelector('#sendMessageForm')
 const $messageFormInput = $messageForm.elements.message
 const $messageFormButton = $messageForm.querySelector('button')
 const $sendLocationButton = document.querySelector('#sendLocationID')
-const $messagesDiv = document.querySelector('#messagesID')
+// const $messagesDiv = document.querySelector('#messagesID')
+const $messages = document.querySelector('#messages')
+
+// TEMPLATES
+const messageTempalate = document.querySelector('#message-template').innerHTML
+const messageURLTemplate = document.querySelector('#message-url-template').innerHTML
 
 // Send location in message
 $sendLocationButton.addEventListener('click', () => {
@@ -52,20 +55,12 @@ $messageForm.addEventListener('submit', (e) => {
     })
 })
 
-// update message array
-const updateMessagesDOM = () => {
-    const messageString = messages.map((message) => {
-        if (message.includes('https')) {
-            return `<a href=${message} target="_blank">My location</a>`
-        }
-        return message
-
-    }).join('<br />')
-    $messagesDiv.innerHTML = messageString
-}
-
 // get new messages
-socket.on('message', (message) => {
-    messages.push(message)
-    updateMessagesDOM()
+socket.on('message', ({ text, createdAt }) => {
+    const html = Mustache.render(messageTempalate, { message: text, createdAt: moment(createdAt).format('h:mm a') })
+    $messages.insertAdjacentHTML('beforeend', html)
+})
+socket.on('locationMessage', ({ text, createdAt }) => {
+    const html = Mustache.render(messageURLTemplate, { url: text, createdAt: moment(createdAt).format('h:mm a') })
+    $messages.insertAdjacentHTML('beforeend', html)
 })
