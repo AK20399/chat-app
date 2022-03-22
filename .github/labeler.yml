@@ -1,7 +1,7 @@
 repoChanges:
     - '*'
 frontEndChanges:
-    - 'public/*'
+    - '/public/*'
 
 backEndChanges:
-    - 'src/*'
+    - '/src/*'
