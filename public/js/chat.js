@@ -9,12 +9,13 @@ const $messageForm = document.querySelector('#sendMessageForm')
 const $messageFormInput = $messageForm.elements.message
 const $messageFormButton = $messageForm.querySelector('button')
 const $sendLocationButton = document.querySelector('#sendLocationID')
-// const $messagesDiv = document.querySelector('#messagesID')
 const $messages = document.querySelector('#messages')
+const $sidebar = document.querySelector('#sidebar')
 
 // TEMPLATES
 const messageTempalate = document.querySelector('#message-template').innerHTML
 const messageURLTemplate = document.querySelector('#message-url-template').innerHTML
+const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
 
 // Options
 const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true })
@@ -60,15 +61,14 @@ $messageForm.addEventListener('submit', (e) => {
 })
 
 // get new messages
-socket.on('message', ({ text, createdAt }) => {
-    const html = Mustache.render(messageTempalate, { message: text, createdAt: moment(createdAt).format('h:mm a') })
+socket.on('message', ({ text, createdAt, username: mUsername }) => {
+    const html = Mustache.render(messageTempalate, { message: text, createdAt: moment(createdAt).format('h:mm a'), username: mUsername })
     $messages.insertAdjacentHTML('beforeend', html)
 })
-socket.on('locationMessage', ({ text, createdAt }) => {
-    const html = Mustache.render(messageURLTemplate, { url: text, createdAt: moment(createdAt).format('h:mm a') })
+socket.on('locationMessage', ({ text, createdAt, username: mUsername }) => {
+    const html = Mustache.render(messageURLTemplate, { url: text, createdAt: moment(createdAt).format('h:mm a'), username: mUsername })
     $messages.insertAdjacentHTML('beforeend', html)
 })
-
 
 socket.emit('join', { username, room }, (error) => {
     if (error) {
@@ -76,4 +76,9 @@ socket.emit('join', { username, room }, (error) => {
         return alert(error)
     }
     return true
+})
+
+socket.on('roomdata', ({ room, users }) => {
+    const html = Mustache.render(sidebarTemplate, { room, users })
+    $sidebar.innerHTML = html
 })
