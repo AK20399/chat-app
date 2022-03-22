@@ -1,5 +1,4 @@
 /* eslint-disable import/extensions */
-/* eslint-disable no-unused-vars */
 import express from 'express'
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
@@ -30,7 +29,7 @@ io.on('connection', (socket) => {
         // welcome message
         socket.emit(
             'message',
-            generateMessage(`Welcome ${user.username} Tiktoker!`)
+            generateMessage(`Welcome ${user.username} Tiktoker!`, 'Admin')
         )
 
         // send joined message except current user
@@ -39,9 +38,16 @@ io.on('connection', (socket) => {
             .emit(
                 'message',
                 generateMessage(
-                    `Yay, ${user.username} tiktoker joined our ${user.room} group`
+                    `Yay, ${user.username} tiktoker joined our ${user.room} group`,
+                    'Admin'
                 )
             )
+
+        // send room users
+        io.to(user.room).emit('roomdata', {
+            room: user.room,
+            users: getUsersInRoom(user.room),
+        })
         callback()
         return true
     })
@@ -53,17 +59,23 @@ io.on('connection', (socket) => {
         if (filter.isProfane(message)) {
             return callback('profanity not allowed')
         }
-        io.to('js').emit('message', generateMessage(message))
+        const user = getUser(socket.id)
+        io.to(user.room).emit(
+            'message',
+            generateMessage(message, user.username)
+        )
         callback()
         return ''
     })
 
     // send location to all users
     socket.on('sendLocation', (location, callback) => {
-        io.emit(
+        const user = getUser(socket.id)
+        io.to(user.room).emit(
             'locationMessage',
             generateMessage(
-                `https://google.com/maps?q=${location.latitude},${location.longitude}`
+                `https://google.com/maps?q=${location.latitude},${location.longitude}`,
+                user.username
             )
         )
         // callback('something went wrong')
@@ -77,9 +89,14 @@ io.on('connection', (socket) => {
             io.to(user.room).emit(
                 'message',
                 generateMessage(
-                    `Oops ${user.username} tiktoker left our precious ${user.room} group`
+                    `Oops ${user.username} tiktoker left our precious ${user.room} group`,
+                    'Admin'
                 )
             )
+            io.to(user.room).emit('roomdata', {
+                room: user.room,
+                users: getUsersInRoom(user.room),
+            })
         }
     })
 })
