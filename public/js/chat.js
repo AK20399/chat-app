@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable no-alert */
 /* eslint-disable no-undef */
 // eslint-disable-next-line no-undef
@@ -14,6 +15,9 @@ const $messages = document.querySelector('#messages')
 // TEMPLATES
 const messageTempalate = document.querySelector('#message-template').innerHTML
 const messageURLTemplate = document.querySelector('#message-url-template').innerHTML
+
+// Options
+const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
 // Send location in message
 $sendLocationButton.addEventListener('click', () => {
@@ -63,4 +67,13 @@ socket.on('message', ({ text, createdAt }) => {
 socket.on('locationMessage', ({ text, createdAt }) => {
     const html = Mustache.render(messageURLTemplate, { url: text, createdAt: moment(createdAt).format('h:mm a') })
     $messages.insertAdjacentHTML('beforeend', html)
+})
+
+
+socket.emit('join', { username, room }, (error) => {
+    if (error) {
+        location.href = '/'
+        return alert(error)
+    }
+    return true
 })
