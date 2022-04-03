@@ -3,6 +3,8 @@ import express from 'express'
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import http from 'http'
+import dotenv from 'dotenv'
+import cors from 'cors'
 
 import { Server } from 'socket.io'
 import BadWords from 'bad-words'
@@ -12,9 +14,16 @@ import { addUser, getUser, getUsersInRoom, removeUser } from './utils/users.mjs'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
+dotenv.config()
 const app = express()
+app.use(cors())
 const server = http.createServer(app)
-const io = new Server(server)
+const io = new Server(server, {
+    cors: {
+        origin: '*',
+        methods: ['GET', 'POST']
+    }
+})
 
 io.on('connection', (socket) => {
     // welcome message to room and new user joined message
@@ -24,8 +33,8 @@ io.on('connection', (socket) => {
         if (error) {
             return callback(error)
         }
+        console.log("d:", user)
         socket.join(user.room)
-
         // welcome message
         socket.emit(
             'message',
@@ -101,8 +110,6 @@ io.on('connection', (socket) => {
     })
 })
 
-const port = process.env.PORT || 3000
-
 const publicDirectoryPath = path.join(__dirname, '../public')
 
 app.use(express.static(publicDirectoryPath))
@@ -111,6 +118,6 @@ app.get('/', (req, res) => {
     res.send('index.html')
 })
 
-server.listen(port, () => {
-    console.log(`Server started on port ${port}`)
+server.listen(process.env.PORT, () => {
+    console.log(`Server started on port ${process.env.PORT}`)
 })

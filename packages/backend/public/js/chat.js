@@ -15,7 +15,7 @@ const $sidebar = document.querySelector('#sidebar')
 // TEMPLATES
 const messageTempalate = document.querySelector('#message-template').innerHTML
 const messageURLTemplate = document.querySelector('#message-url-template').innerHTML
-const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
+const sidebarTemplate = document.querySelecres.send("I am a backend server") tor('#sidebar-template').innerHTML
 
 // Options
 const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true })

@@ -1,13 +1,17 @@
 {
-    "name": "chat-app",
+    "name": "root",
+    "private": true,
     "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "type": "module",
+    "devDependencies": {
+        "lerna": "^4.0.0"
+    },
     "scripts": {
-        "start": "node src/index.js",
-        "dev": "nodemon src/index.js",
-        "prepare": "husky install"
+        "start": "lerna run start",
+        "test": "lerna run test",
+        "dev": "lerna run dev",
+        "prepare": "husky install",
+        "clean": "lerna clean",
+        "bootstrap": "lerna bootstrap"
     },
     "lint-staged": {
         "src/**/*.{js,jsx,ts,tsx,json,css}": [
@@ -15,22 +19,5 @@
             "eslint --fix src/ && eslint --fix public/",
             "git add"
         ]
-    },
-    "author": "Aakash K Darji",
-    "license": "MIT",
-    "dependencies": {
-        "bad-words": "^3.0.4",
-        "express": "^4.17.3",
-        "socket.io": "^4.4.1"
-    },
-    "devDependencies": {
-        "eslint": "^8.10.0",
-        "eslint-config-airbnb-base": "^15.0.0",
-        "eslint-config-prettier": "^8.5.0",
-        "eslint-plugin-import": "^2.25.4",
-        "husky": "^7.0.4",
-        "lint-staged": "^12.3.7",
-        "nodemon": "^2.0.15",
-        "prettier": "^2.5.1"
     }
 }
