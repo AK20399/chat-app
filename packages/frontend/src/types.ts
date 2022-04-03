@@ -1,7 +1,3 @@
-export interface homeChatProps {
-    setShowHome: (value: boolean) => void
-}
-
 export enum EmessageType {
     message,
     locationMessage,
@@ -11,6 +7,7 @@ export type Tmessage = {
     username: string
     createdAt: string
     type: number
+    text?: string
     url?: string
 }
 

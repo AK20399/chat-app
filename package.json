@@ -6,7 +6,7 @@
         "lerna": "^4.0.0"
     },
     "scripts": {
-        "start": "lerna run start",
+        "start": "lerna bootstrap --hoist && lerna clean -y && lerna run build --scope frontend && lerna run start",
         "test": "lerna run test",
         "dev": "lerna run dev",
         "prepare": "husky install",
@@ -14,9 +14,9 @@
         "bootstrap": "lerna bootstrap"
     },
     "lint-staged": {
-        "src/**/*.{js,jsx,ts,tsx,json,css}": [
+        "packages/**/*.{js,jsx,ts,tsx,json,css}": [
             "prettier --write",
-            "eslint --fix src/ && eslint --fix public/",
+            "eslint --fix",
             "git add"
         ]
     }

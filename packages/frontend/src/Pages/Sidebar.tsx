@@ -8,8 +8,8 @@ export const Sidebar = ({ room, users }: { room: string; users: Tuser[] }) => {
             <h3 className="list-title">Users</h3>
             <ul className="users">
                 {users?.length > 0 &&
-                    users.map((user) => {
-                        return <li>{user.username}</li>
+                    users.map((user, i) => {
+                        return <li key={i}>{user.username}</li>
                     })}
             </ul>
         </div>

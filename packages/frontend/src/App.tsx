@@ -3,18 +3,18 @@ import './App.css'
 import { Home } from './Pages/Home'
 import { Chat } from './Pages/Chat'
 import { SocketContext, socket } from './context/socket'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 const App = () => {
-    const [showHome, setShowHome] = React.useState(true)
-
     return (
-        <SocketContext.Provider value={socket}>
-            {showHome ? (
-                <Home setShowHome={setShowHome} />
-            ) : (
-                <Chat setShowHome={setShowHome} />
-            )}
-        </SocketContext.Provider>
+        <BrowserRouter>
+            <SocketContext.Provider value={socket}>
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/chat" element={<Chat />} />
+                </Routes>
+            </SocketContext.Provider>
+        </BrowserRouter>
     )
 }
 

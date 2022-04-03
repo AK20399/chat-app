@@ -1,75 +1,147 @@
 import React from 'react'
-// import { SocketContext } from '../context/socket'
-import { connect } from 'socket.io-client'
-import {
-    EmessageType,
-    homeChatProps,
-    socketEvents,
-    Tmessage,
-    Tuser,
-} from '../types'
+import { SocketContext } from '../context/socket'
+import { EmessageType, socketEvents, Tmessage, Tuser } from '../types'
 import { Sidebar } from './Sidebar'
+import moment from 'moment'
 
-export const Chat: React.FunctionComponent<homeChatProps> = () => {
-    // const socket = React.useContext(SocketContext)
-    const socket = connect('http://localhost:5000')
+export const Chat: React.FunctionComponent = () => {
+    const socket = React.useContext(SocketContext)
 
+    const messagesRef = React.useRef<HTMLDivElement>(null)
+    const messageInputRef = React.useRef<HTMLInputElement>(null)
+    const sendButtonRef = React.useRef<HTMLButtonElement>(null)
+    const sendLocationButtonRef = React.useRef<HTMLButtonElement>(null)
+    const [message, setMessage] = React.useState('')
     const [messagesData, setMessagesData] = React.useState<Tmessage[] | []>([])
     const [room, setRoom] = React.useState('')
     const [users, setUsers] = React.useState<[] | Tuser[]>([])
 
-    const getRoomData = (test: any) => {
-        console.log('T:', test)
+    const getRoomData = (socketData: {
+        room: typeof room
+        users: typeof users
+    }) => {
+        setRoom(socketData.room)
+        setUsers(socketData.users)
     }
 
-    const getMessage = (data: any) => {
-        console.log('DATA:', data)
+    const getMessage = (socketData: Tmessage) => {
+        setMessagesData((prev) => [
+            ...prev,
+            {
+                ...socketData,
+                createdAt: moment(socketData.createdAt).format('h:mm a'),
+                type: socketData?.text?.includes('http')
+                    ? EmessageType.locationMessage
+                    : EmessageType.message,
+            },
+        ])
+        if (messagesRef.current) {
+            messagesRef.current.scrollTop = messagesRef.current.scrollHeight
+        }
+    }
+
+    const handleMessageSend = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+
+        sendButtonRef.current?.setAttribute('disabled', 'disabled')
+
+        if (socket?.connected) {
+            socket.emit('sendMessage', message, (error: string) => {
+                sendButtonRef.current?.removeAttribute('disabled')
+                setMessage('')
+                messageInputRef.current?.focus()
+
+                if (error) {
+                    return alert(error)
+                }
+
+                return true
+            })
+        }
+    }
+
+    const handleSendLocation = (event: React.MouseEvent<HTMLElement>) => {
+        if (!navigator.geolocation) {
+            const geoNotSupported =
+                "Your stupid browser doesn't support geolocation"
+            alert(geoNotSupported)
+            return
+        }
+        sendLocationButtonRef.current?.setAttribute('disabled', 'disabled')
+        navigator.geolocation.getCurrentPosition((position) => {
+            if (socket?.connected) {
+                socket.emit(
+                    'sendLocation',
+                    {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    },
+                    (error: string) => {
+                        sendLocationButtonRef.current?.removeAttribute(
+                            'disabled'
+                        )
+                        if (error) {
+                            alert(error)
+                        }
+                    }
+                )
+            }
+        })
     }
 
     React.useEffect(() => {
-        socket?.connected && socket.on(socketEvents.ROOM_DATA, getRoomData)
-        socket?.connected && socket.on(socketEvents.MESSAGE, getMessage)
-        socket?.connected &&
+        if (socket?.connected) {
+            messageInputRef.current?.focus()
+            socket.on(socketEvents.MESSAGE, getMessage)
             socket.on(socketEvents.LOCATION_MESSAGE, getMessage)
-    }, [socket])
+            socket.on(socketEvents.ROOM_DATA, getRoomData)
+        }
+        return () => {
+            if (socket) {
+                socket.off(socketEvents.MESSAGE, getMessage)
+                socket.off(socketEvents.LOCATION_MESSAGE, getMessage)
+                socket.off(socketEvents.ROOM_DATA, getRoomData)
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <div className="chat">
             <Sidebar room={room} users={users} />
             <div className="chat__main">
-                <div id="messages" className="chat__messages">
+                <div id="messages" className="chat__messages" ref={messagesRef}>
                     {messagesData?.length > 0 &&
-                        messagesData.map((message) => {
-                            if (message?.type === EmessageType.message) {
+                        messagesData.map((data, i) => {
+                            if (data?.type === EmessageType.message) {
                                 return (
-                                    <div className="message">
+                                    <div className="message" key={i}>
                                         <p>
                                             <span className="message__name">
-                                                {message?.username || ''}
+                                                {data?.username || ''}
                                             </span>
                                             <span className="message__meta">
-                                                {message?.createdAt || ''}
+                                                {data?.createdAt || ''}
                                             </span>
                                         </p>
-                                        <p>{{ message }}</p>
+                                        <p>{data?.text || ''}</p>
                                     </div>
                                 )
                             }
                             return (
-                                <div>
+                                <div key={i}>
                                     <p>
                                         <span className="message__name">
-                                            {message?.username || ''}
+                                            {data?.username || ''}
                                         </span>
                                         <span className="message__meta">
-                                            {message?.createdAt || ''}
+                                            {data?.createdAt || ''}
                                         </span>
                                     </p>
                                     <p>
                                         <a
-                                            href={message?.url}
+                                            href={data?.text}
                                             target="_blank"
-                                            ref="noopener"
                                             rel="noreferrer"
                                         >
                                             My current location
@@ -80,17 +152,29 @@ export const Chat: React.FunctionComponent<homeChatProps> = () => {
                         })}
                 </div>
                 <div className="compose">
-                    <form id="sendMessageForm">
+                    <form onSubmit={handleMessageSend} id="sendMessageForm">
                         <input
                             type="text"
                             name="message"
                             placeholder="Enter message"
                             required
                             autoComplete="off"
+                            onChange={(e) => setMessage(e.target.value)}
+                            value={message}
+                            ref={messageInputRef}
                         />
-                        <button type="submit">Send</button> <br />
+                        <button type="submit" ref={sendButtonRef}>
+                            Send
+                        </button>
+                        <br />
                     </form>
-                    <button id="sendLocationID">Send location</button>
+                    <button
+                        id="sendLocationID"
+                        ref={sendLocationButtonRef}
+                        onClick={handleSendLocation}
+                    >
+                        Send location
+                    </button>
                     <br />
                     <br />
                 </div>

@@ -1,23 +1,23 @@
 import React from 'react'
 import { SocketContext } from '../context/socket'
-import { homeChatProps } from '../types'
+import { useNavigate } from 'react-router-dom'
 
-export const Home: React.FunctionComponent<homeChatProps> = ({
-    setShowHome,
-}) => {
+export const Home: React.FunctionComponent = () => {
     const socket = React.useContext(SocketContext)
+
+    const navigate = useNavigate()
 
     const [username, setUsername] = React.useState('')
     const [room, setRoom] = React.useState('')
 
     const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
+        navigate('/chat')
         socket &&
             socket.emit('join', { username, room }, (error: string) => {
                 if (error) {
                     return alert(error)
                 }
-                setShowHome(false)
                 return true
             })
     }

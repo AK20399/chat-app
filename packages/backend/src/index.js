@@ -21,8 +21,8 @@ const server = http.createServer(app)
 const io = new Server(server, {
     cors: {
         origin: '*',
-        methods: ['GET', 'POST']
-    }
+        methods: ['GET', 'POST'],
+    },
 })
 
 io.on('connection', (socket) => {
@@ -33,12 +33,11 @@ io.on('connection', (socket) => {
         if (error) {
             return callback(error)
         }
-        console.log("d:", user)
         socket.join(user.room)
         // welcome message
         socket.emit(
             'message',
-            generateMessage(`Welcome ${user.username} Tiktoker!`, 'Admin')
+            generateMessage(`Welcome ${user.username}!`, 'Admin')
         )
 
         // send joined message except current user
@@ -47,7 +46,7 @@ io.on('connection', (socket) => {
             .emit(
                 'message',
                 generateMessage(
-                    `Yay, ${user.username} tiktoker joined our ${user.room} group`,
+                    `Yay, ${user.username} joined our ${user.room} group`,
                     'Admin'
                 )
             )
@@ -98,7 +97,7 @@ io.on('connection', (socket) => {
             io.to(user.room).emit(
                 'message',
                 generateMessage(
-                    `Oops ${user.username} tiktoker left our precious ${user.room} group`,
+                    `Oops ${user.username} left our precious ${user.room} group`,
                     'Admin'
                 )
             )
@@ -110,12 +109,12 @@ io.on('connection', (socket) => {
     })
 })
 
-const publicDirectoryPath = path.join(__dirname, '../public')
+const publicDirectoryPath = path.join(__dirname, '../../frontend/build')
 
 app.use(express.static(publicDirectoryPath))
 
 app.get('/', (req, res) => {
-    res.send('index.html')
+    res.sendFile(path.join(__dirname, '../../frontend/build', 'index.html'))
 })
 
 server.listen(process.env.PORT, () => {
