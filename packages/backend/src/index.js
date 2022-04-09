@@ -9,7 +9,13 @@ import cors from 'cors'
 import { Server } from 'socket.io'
 import BadWords from 'bad-words'
 import { generateMessage } from './utils/messages.mjs'
-import { addUser, getUser, getUsersInRoom, removeUser } from './utils/users.mjs'
+import {
+    addUser,
+    getAllRoomsName,
+    getUser,
+    getUsersInRoom,
+    removeUser,
+} from './utils/users.mjs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -115,6 +121,9 @@ app.use(express.static(publicDirectoryPath))
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../../frontend/build', 'index.html'))
+})
+app.get('/room', (req, res) => {
+    res.json(getAllRoomsName())
 })
 
 server.listen(process.env.PORT, () => {
