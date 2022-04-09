@@ -6,7 +6,8 @@
         "lerna": "^4.0.0"
     },
     "scripts": {
-        "start": "lerna bootstrap --hoist && lerna clean -y && lerna run build --scope frontend && lerna run start",
+        "install": "lerna run install",
+        "start": "lerna run build --scope frontend && lerna bootstrap --hoist && lerna clean -y && lerna run start",
         "test": "lerna run test",
         "dev": "lerna run dev",
         "prepare": "husky install",
