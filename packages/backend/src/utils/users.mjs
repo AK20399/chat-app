@@ -47,4 +47,13 @@ export const getUsersInRoom = (room) => {
     room = room.trim().toLowerCase()
     return users.filter((x) => x.room === room)
 }
+// get all rooms nam
+export const getAllRoomsName = () => {
+    return users.reduce((rooms, user) => {
+        if (user?.room && !rooms.includes(user.room)) {
+            rooms.push(user.room)
+            return rooms
+        }
+    }, [])
+}
 

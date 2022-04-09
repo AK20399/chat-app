@@ -2,7 +2,7 @@ import React from 'react'
 import './App.css'
 import { Home } from './Pages/Home'
 import { Chat } from './Pages/Chat'
-import { SocketContext, socket } from './context/socket'
+import { SocketContext, socket } from './utils/context/socket'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 const App = () => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { SocketContext } from '../context/socket'
+import { SocketContext } from '../utils/context/socket'
 import { EmessageType, socketEvents, Tmessage, Tuser } from '../types'
 import { Sidebar } from './Sidebar'
 import moment from 'moment'
