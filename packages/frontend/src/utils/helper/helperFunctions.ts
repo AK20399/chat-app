@@ -1,4 +1,7 @@
-export const getAPIUrl = () => window.location.origin
+export const getAPIUrl = () =>
+    process.env?.REACT_APP_BACKEND
+        ? process.env.REACT_APP_BACKEND
+        : window.location.origin
 
 export const showError = (error: string) => {
     console.error(error)
