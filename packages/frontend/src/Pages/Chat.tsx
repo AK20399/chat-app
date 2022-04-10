@@ -103,7 +103,7 @@ export const Chat: React.FunctionComponent = () => {
         })
     }
     const handleUsersWhoAreTyping = (usersTyping: Tuser[]) => {
-        setUsersAreTyping(usersTyping)
+        setUsersAreTyping(usersTyping.filter((user) => user.id !== socket?.id))
     }
 
     React.useEffect(() => {

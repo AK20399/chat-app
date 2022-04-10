@@ -62,5 +62,5 @@ export const updateTypingValue = (id, isTyping) => {
     if (index >= 0) {
         users[index]['isTyping'] = isTyping
     }
-    return users.filter((user) => user.room === users[index].room && user?.isTyping).filter((x) => x.id !== id)
+    return users.filter((user) => user.room === users[index].room && user?.isTyping)
 }
