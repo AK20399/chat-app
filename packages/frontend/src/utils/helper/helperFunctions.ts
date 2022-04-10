@@ -1,4 +1,5 @@
 export const getAPIUrl = () =>
+    process.env?.REACT_APP_ENV === 'development' &&
     process.env?.REACT_APP_BACKEND
         ? process.env.REACT_APP_BACKEND
         : window.location.origin
