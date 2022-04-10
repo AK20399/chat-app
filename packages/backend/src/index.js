@@ -15,6 +15,7 @@ import {
     getUser,
     getUsersInRoom,
     removeUser,
+    updateTypingValue,
 } from './utils/users.mjs'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -94,6 +95,15 @@ io.on('connection', (socket) => {
         )
         // callback('something went wrong')
         callback()
+    })
+
+    socket.on('typing', (isTyping) => {
+        const user = getUser(socket.id)
+        if (user) {
+            socket.broadcast
+                .to(user.room)
+                .emit('usersTyping', updateTypingValue(socket.id, isTyping))
+        }
     })
 
     // send disconnected message

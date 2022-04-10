@@ -24,7 +24,7 @@
         "bootstrap": "lerna bootstrap"
     },
     "lint-staged": {
-        "packages/**/*.{js,jsx,ts,tsx,css}": [
+        "packages/**/*.{js,jsx,ts,tsx}": [
             "prettier --write",
             "eslint --fix"
         ]
