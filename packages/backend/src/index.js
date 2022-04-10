@@ -14,7 +14,6 @@ import {
     getAllRoomsName,
     getUser,
     getUsersInRoom,
-    getUsersTypingInCurrentRoom,
     removeUser,
     updateTypingValue,
 } from './utils/users.mjs'
@@ -99,10 +98,12 @@ io.on('connection', (socket) => {
     })
 
     socket.on('typing', (isTyping) => {
-        const user = updateTypingValue(socket.id, isTyping)
-        socket.broadcast
-            .to(user.room)
-            .emit('usersTyping', getUsersTypingInCurrentRoom(user.room))
+        const user = getUser(socket.id)
+        if (user) {
+            socket.broadcast
+                .to(user.room)
+                .emit('usersTyping', updateTypingValue(socket.id, isTyping))
+        }
     })
 
     // send disconnected message

@@ -59,11 +59,8 @@ export const getAllRoomsName = () => {
 
 export const updateTypingValue = (id, isTyping) => {
     const index = users.findIndex((user) => user.id === id)
-    if (index !== 1) {
+    if (index >= 0) {
         users[index]['isTyping'] = isTyping
     }
-    return users[index]
-}
-export const getUsersTypingInCurrentRoom = (room) => {
-    return users.filter((user) => user.room === room && user?.isTyping)
+    return users.filter((user) => user.room === users[index].room && user?.isTyping).filter((x) => x.id !== id)
 }

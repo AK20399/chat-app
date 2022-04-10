@@ -12,7 +12,10 @@ export type Tmessage = {
 }
 
 export type Tuser = {
+    id: string
     username: string
+    room: string
+    isTyping?: boolean
 }
 
 export enum socketEvents {

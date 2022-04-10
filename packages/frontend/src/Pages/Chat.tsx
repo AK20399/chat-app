@@ -16,7 +16,7 @@ export const Chat: React.FunctionComponent = () => {
     const [room, setRoom] = React.useState('')
     const [users, setUsers] = React.useState<[] | Tuser[]>([])
     const [isTyping, setIsTyping] = React.useState(false)
-    const [usersAreTyping, setUsersAreTyping] = React.useState<[] | Tuser[]>([])
+    const [usersAreTyping, setUsersAreTyping] = React.useState<Tuser[] | []>([])
 
     React.useEffect(() => {
         if (socket) {
@@ -190,7 +190,8 @@ export const Chat: React.FunctionComponent = () => {
                                         .map((user) => user.username)
                                         .join(' ,')}
                                 </b>{' '}
-                                typing
+                                {usersAreTyping?.length === 1 ? 'is' : 'are'}{' '}
+                                typing...
                             </span>
                         )}
                         <div>
