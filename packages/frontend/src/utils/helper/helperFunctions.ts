@@ -1,5 +1,6 @@
-export const getAPIUrl = () =>
-    `http://${window.location.hostname}:${process.env.REACT_APP_PORT}`
+const port = process.env?.PORT || 5000
+
+export const getAPIUrl = () => `http://${window.location.hostname}:${port}`
 
 export const showError = (error: string) => {
     console.error(error)
