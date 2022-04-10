@@ -15,6 +15,20 @@ export const Chat: React.FunctionComponent = () => {
     const [messagesData, setMessagesData] = React.useState<Tmessage[] | []>([])
     const [room, setRoom] = React.useState('')
     const [users, setUsers] = React.useState<[] | Tuser[]>([])
+    const [isTyping, setIsTyping] = React.useState(false)
+    const [usersAreTyping, setUsersAreTyping] = React.useState<[] | Tuser[]>([])
+
+    React.useEffect(() => {
+        if (socket) {
+            if (message && !isTyping) {
+                socket?.emit(socketEvents.TYPING, !isTyping)
+                setIsTyping(true)
+            } else if (isTyping && message === '') {
+                socket?.emit(socketEvents.TYPING, !isTyping)
+                setIsTyping(false)
+            }
+        }
+    }, [message, isTyping, socket])
 
     const getRoomData = (socketData: {
         room: typeof room
@@ -88,6 +102,9 @@ export const Chat: React.FunctionComponent = () => {
             }
         })
     }
+    const handleUsersWhoAreTyping = (usersTyping: Tuser[]) => {
+        setUsersAreTyping(usersTyping)
+    }
 
     React.useEffect(() => {
         if (socket?.connected) {
@@ -95,6 +112,7 @@ export const Chat: React.FunctionComponent = () => {
             socket.on(socketEvents.MESSAGE, getMessage)
             socket.on(socketEvents.LOCATION_MESSAGE, getMessage)
             socket.on(socketEvents.ROOM_DATA, getRoomData)
+            socket.on(socketEvents.USERS_TYPING, handleUsersWhoAreTyping)
         }
         return () => {
             if (socket) {
@@ -152,31 +170,59 @@ export const Chat: React.FunctionComponent = () => {
                         })}
                 </div>
                 <div className="compose">
-                    <form onSubmit={handleMessageSend} id="sendMessageForm">
-                        <input
-                            type="text"
-                            name="message"
-                            placeholder="Enter message"
-                            required
-                            autoComplete="off"
-                            onChange={(e) => setMessage(e.target.value)}
-                            value={message}
-                            ref={messageInputRef}
-                        />
-                        <button type="submit" ref={sendButtonRef}>
-                            Send
-                        </button>
-                        <br />
-                    </form>
-                    <button
-                        id="sendLocationID"
-                        ref={sendLocationButtonRef}
-                        onClick={handleSendLocation}
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            width: '100%',
+                        }}
                     >
-                        Send location
-                    </button>
-                    <br />
-                    <br />
+                        {usersAreTyping?.length > 0 && (
+                            <span
+                                style={{
+                                    marginLeft: 10,
+                                    marginBottom: 5,
+                                    fontSize: 14,
+                                }}
+                            >
+                                <b>
+                                    {usersAreTyping
+                                        .map((user) => user.username)
+                                        .join(' ,')}
+                                </b>{' '}
+                                typing
+                            </span>
+                        )}
+                        <div>
+                            <form
+                                onSubmit={handleMessageSend}
+                                id="sendMessageForm"
+                            >
+                                <input
+                                    type="text"
+                                    name="message"
+                                    placeholder="Enter message"
+                                    required
+                                    autoComplete="off"
+                                    onChange={(e) => setMessage(e.target.value)}
+                                    value={message}
+                                    ref={messageInputRef}
+                                />
+                                <button type="submit" ref={sendButtonRef}>
+                                    Send
+                                </button>
+                                <br />
+                                <button
+                                    style={{ marginLeft: 10 }}
+                                    id="sendLocationID"
+                                    ref={sendLocationButtonRef}
+                                    onClick={handleSendLocation}
+                                >
+                                    Send location
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

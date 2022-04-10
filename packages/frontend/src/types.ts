@@ -19,4 +19,6 @@ export enum socketEvents {
     ROOM_DATA = 'roomdata',
     MESSAGE = 'message',
     LOCATION_MESSAGE = 'locationMessage',
+    USERS_TYPING = 'usersTyping',
+    TYPING = 'typing',
 }
