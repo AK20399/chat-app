@@ -1,4 +1,4 @@
-export const getAPIUrl = () => window.location.href
+export const getAPIUrl = () => window.location.origin
 
 export const showError = (error: string) => {
     console.error(error)
