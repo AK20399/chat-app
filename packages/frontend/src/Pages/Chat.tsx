@@ -3,10 +3,15 @@ import { SocketContext } from '../utils/context/socket'
 import { EmessageType, socketEvents, Tmessage, Tuser } from '../types'
 import { Sidebar } from './Sidebar'
 import moment from 'moment'
+import {
+    isCurrentUser,
+    showNotification,
+} from '../utils/helper/helperFunctions'
+import { useLocation } from 'react-router-dom'
 
 export const Chat: React.FunctionComponent = () => {
     const socket = React.useContext(SocketContext)
-
+    const { state } = useLocation()
     const messagesRef = React.useRef<HTMLDivElement>(null)
     const messageInputRef = React.useRef<HTMLInputElement>(null)
     const sendButtonRef = React.useRef<HTMLButtonElement>(null)
@@ -33,12 +38,21 @@ export const Chat: React.FunctionComponent = () => {
     const getRoomData = (socketData: {
         room: typeof room
         users: typeof users
+        currentUser: Tuser
     }) => {
         setRoom(socketData.room)
         setUsers(socketData.users)
     }
 
     const getMessage = (socketData: Tmessage) => {
+        // show notification
+        if (
+            socketData?.text &&
+            socketData.username?.toLowerCase() !== 'admin' &&
+            !isCurrentUser(socketData.username, (state as any)?.currentUser)
+        ) {
+            showNotification(socketData.username, socketData.text)
+        }
         setMessagesData((prev) => [
             ...prev,
             {
@@ -136,7 +150,12 @@ export const Chat: React.FunctionComponent = () => {
                                     <div className="message" key={i}>
                                         <p>
                                             <span className="message__name">
-                                                {data?.username || ''}
+                                                {isCurrentUser(
+                                                    data?.username,
+                                                    (state as any)?.currentUser
+                                                )
+                                                    ? 'You'
+                                                    : data?.username || ''}
                                             </span>
                                             <span className="message__meta">
                                                 {data?.createdAt || ''}
@@ -150,7 +169,12 @@ export const Chat: React.FunctionComponent = () => {
                                 <div key={i}>
                                     <p>
                                         <span className="message__name">
-                                            {data?.username || ''}
+                                            {isCurrentUser(
+                                                data?.username,
+                                                (state as any)?.currentUser
+                                            )
+                                                ? 'You'
+                                                : data?.username || ''}
                                         </span>
                                         <span className="message__meta">
                                             {data?.createdAt || ''}

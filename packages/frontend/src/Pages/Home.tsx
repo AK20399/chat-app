@@ -32,7 +32,7 @@ export const Home: React.FunctionComponent = () => {
 
     const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        navigate('/chat')
+        navigate('/chat', { state: { currentUser: username } })
         socket &&
             socket.emit('join', { username, room }, (error: string) => {
                 if (error) {
