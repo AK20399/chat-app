@@ -19,7 +19,7 @@ export const Home: React.FunctionComponent = () => {
 
     const getRoomsList = async () => {
         try {
-            const tempRooms = await apiCall<string[]>(`${getAPIUrl()}room`, {
+            const tempRooms = await apiCall<string[]>(`${getAPIUrl()}/room`, {
                 method: 'GET',
             })
             setRooms(tempRooms)
