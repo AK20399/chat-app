@@ -18,9 +18,19 @@ export const apiCall = <T>(url: string, init?: RequestInit): Promise<T> => {
     })
 }
 
-export const showNotification = (title: string, body: string) => {
+export const showNotification = (
+    title: string,
+    body: string
+): Notification | undefined => {
     if (Notification.permission === 'granted') {
-        new Notification(title, { body })
+        const notification = new Notification(title, {
+            body,
+            icon: 'logo.png',
+            image: 'logo.png',
+            badge: 'logo.png',
+            vibrate: [200, 100, 200],
+        })
+        return notification
     }
 }
 
