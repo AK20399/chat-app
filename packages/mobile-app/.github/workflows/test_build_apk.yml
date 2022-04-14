@@ -1,0 +1,27 @@
+name: Test Build Apk
+on:
+  workflow_dispatch:
+
+jobs:
+  build_apk:
+    name: Build flutter app (APK)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Prepare Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: "11.x"
+      - name: Prepare Flutter Environment
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: "2.10.2"
+      - name: Verify flutter environment
+        run: flutter doctor --verbose
+      - name : Initialize packages
+        run: |
+          flutter clean
+          flutter pub get
+      - name: Build APK
+        run: flutter build apk
