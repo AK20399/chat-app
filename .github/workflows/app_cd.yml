@@ -33,6 +33,8 @@ jobs:
                   cd mobile-app
             - name: Initialize packages
               run: |
+                  cd packages
+                  cd mobile-app
                   flutter clean
                   flutter pub get
             - name: Build APK
