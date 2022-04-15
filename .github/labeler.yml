@@ -1,7 +1,0 @@
-repoChanges:
-    - '*'
-frontEndChanges:
-    - '/public/*'
-
-backEndChanges:
-    - '/src/*'
