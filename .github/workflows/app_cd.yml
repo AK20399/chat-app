@@ -27,14 +27,9 @@ jobs:
               uses: olegtarasov/get-tag@v2.1
             - name: Verify tag
               run: echo ${{steps.tag.outputs.tag}}
-            - name: Change directory
-              run: |
-                  cd packages
-                  cd mobile-app
             - name: Initialize packages
+              working-directory: ./packages/mobile-app
               run: |
-                  cd packages
-                  cd mobile-app
                   flutter clean
                   flutter pub get
             - name: Build APK
