@@ -33,10 +33,13 @@ jobs:
                   flutter clean
                   flutter pub get
             - name: Build APK
+              working-directory: ./packages/mobile-app
               run: flutter build apk
             - name: Rename Apk file
+              working-directory: ./packages/mobile-app
               run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/mini-chat-${{ steps.tag.outputs.tag }}.apk
             - name: Create a Release APK
+              working-directory: ./packages/mobile-app
               uses: ncipollo/release-action@v1
               with:
                   tag: ${{ steps.tag.outputs.tag }}
