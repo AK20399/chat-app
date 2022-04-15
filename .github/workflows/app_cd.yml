@@ -1,46 +1,45 @@
 name: Build Apk
 on:
-    workflow_dispatch:
+  workflow_dispatch:
 #  push:
 #    branches:
 #      - master
 
+
 jobs:
-    build_apk:
-        name: Build flutter app (APK)
-        runs-on: ubuntu-latest
-        steps:
-            - name: Go to mobile repo
-              uses: cd ./packages/mobile-app
-            - name: Checkout
-              uses: actions/checkout@v2
-            - name: Prepare Java
-              uses: actions/setup-java@v1
-              with:
-                  java-version: '11.x'
-            - name: Prepare Flutter Environment
-              uses: subosito/flutter-action@v1
-              with:
-                  flutter-version: '2.10.2'
-            - name: Verify flutter environment
-              run: flutter doctor --verbose
-            - name: Get tag
-              id: tag
-              uses: olegtarasov/get-tag@v2.1
-            - name: Verify tag
-              run: echo ${{steps.tag.outputs.tag}}
-            - name: Initialize packages
-              run: |
-                  flutter clean
-                  flutter pub get
-            - name: Build APK
-              run: flutter build apk
-            - name: Rename Apk file
-              run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/mini-chat-${{ steps.tag.outputs.tag }}.apk
-            - name: Create a Release APK
-              uses: ncipollo/release-action@v1
-              with:
-                  tag: ${{ steps.tag.outputs.tag }}
-                  artifacts: 'build/app/outputs/flutter-apk/mini-chat-${{ steps.tag.outputs.tag }}.apk'
-                  bodyFile: 'release_note.md'
-                  token: ${{ secrets.PERSONAL_RELEASE_TOKEN }}
+  build_apk:
+    name: Build flutter app (APK)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Prepare Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: "11.x"
+      - name: Prepare Flutter Environment
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: "2.10.2"
+      - name: Verify flutter environment
+        run: flutter doctor --verbose
+      - name: Get tag
+        id: tag
+        uses: olegtarasov/get-tag@v2.1
+      - name: Verify tag
+        run: echo ${{steps.tag.outputs.tag}}
+      - name : Initialize packages
+        run: |
+          flutter clean
+          flutter pub get
+      - name: Build APK
+        run: flutter build apk
+      - name: Rename Apk file
+        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/mini-chat-${{ steps.tag.outputs.tag }}.apk
+      - name: Create a Release APK
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag.outputs.tag }}
+          artifacts: "build/app/outputs/flutter-apk/mini-chat-${{ steps.tag.outputs.tag }}.apk"
+          bodyFile: "release_note.md"
+          token: ${{ secrets.PERSONAL_RELEASE_TOKEN }}
