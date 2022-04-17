@@ -186,7 +186,7 @@ export const Chat: React.FunctionComponent<{ currentUser: string }> = ({
                     ></div>
                     <div style={{ position: 'relative' }}>
                         <IconButton
-                            color="primary"
+                            color={isShowGIF ? 'default' : 'primary'}
                             style={{ position: 'absolute', right: 5, top: 2 }}
                             onClick={() => {
                                 setIsShowGif((prev) => !prev)
