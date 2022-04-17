@@ -35,9 +35,9 @@ export const ChatWrapper: React.FunctionComponent = () => {
 
     return (
         <div className="chat">
-            {/* <Sidebar room={room} users={users}> */}
-            <Chat currentUser={(state as any)?.currentUser} />
-            {/* </Sidebar> */}
+            <Sidebar room={room} users={users}>
+                <Chat currentUser={(state as any)?.currentUser} />
+            </Sidebar>
         </div>
     )
 }
