@@ -129,7 +129,7 @@ export const Messages: React.FunctionComponent<{
     }
 
     return (
-        <Box padding={1}>
+        <Box padding={1} paddingRight={2} paddingLeft={2}>
             {newMessages > 0 && (
                 <Fab
                     variant="extended"
@@ -158,7 +158,24 @@ export const Messages: React.FunctionComponent<{
                 messagesData?.length > 0 &&
                 messagesData.map((message, i) => {
                     return (
-                        <Box key={i} marginTop={2} marginBottom={2}>
+                        <Box
+                            key={i}
+                            marginTop={2}
+                            marginBottom={2}
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: isCurrentUser(
+                                    message?.username,
+                                    currentUser
+                                )
+                                    ? 'flex-end'
+                                    : message?.username?.toLowerCase() ===
+                                      'admin'
+                                    ? 'center'
+                                    : 'flex-start',
+                            }}
+                        >
                             <Typography>
                                 <b>
                                     {isCurrentUser(
