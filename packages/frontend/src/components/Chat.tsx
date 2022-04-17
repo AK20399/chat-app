@@ -138,7 +138,7 @@ export const Chat: React.FunctionComponent<{ currentUser: string }> = ({
                     overflowY: 'scroll',
                 }}
             >
-                <Messages messagesRef={messagesRef} currentUser={currentUser} />
+                {/* <Messages messagesRef={messagesRef} currentUser={currentUser} /> */}
             </Box>
 
             <Box
