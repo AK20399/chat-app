@@ -2,6 +2,21 @@ import React from 'react'
 import { SocketContext } from '../utils/context/socket'
 import { useNavigate } from 'react-router-dom'
 import { apiCall, getAPIUrl, showError } from '../utils/helper/helperFunctions'
+import {
+    Typography,
+    Button,
+    FormControl,
+    InputLabel,
+    OutlinedInput,
+    Autocomplete,
+    TextField,
+    Card,
+    CardContent,
+    CardActions,
+    Box,
+    CardHeader,
+} from '@mui/material'
+import formBackground from '../assets/formBackground.jpg'
 
 export const Home: React.FunctionComponent = () => {
     const socket = React.useContext(SocketContext)
@@ -11,7 +26,6 @@ export const Home: React.FunctionComponent = () => {
     const [username, setUsername] = React.useState('')
     const [room, setRoom] = React.useState('')
     const [rooms, setRooms] = React.useState<string[]>([])
-    const [roomsLoading, setRoomsLoading] = React.useState(true)
 
     React.useEffect(() => {
         getRoomsList()
@@ -25,13 +39,10 @@ export const Home: React.FunctionComponent = () => {
             setRooms(tempRooms)
         } catch (error) {
             showError(error as string)
-        } finally {
-            setRoomsLoading(false)
         }
     }
 
-    const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
+    const handleOnSubmit = () => {
         navigate('/chat', { state: { currentUser: username } })
         socket &&
             socket.emit('join', { username, room }, (error: string) => {
@@ -43,42 +54,98 @@ export const Home: React.FunctionComponent = () => {
     }
 
     return (
-        <div className="centered-form">
-            <div className="centered-form__box">
-                <h1>Join</h1>
-                <form onSubmit={handleOnSubmit}>
-                    <label>Display name</label>
-                    <input
-                        type="text"
-                        name="username"
-                        placeholder="Display name"
-                        required
-                        onChange={(e) => setUsername(e.target.value)}
-                        value={username}
-                    />
-                    {roomsLoading ? (
-                        <p>Loading active rooms...</p>
-                    ) : rooms?.length > 0 ? (
-                        <div>
-                            <b>Active rooms</b>
-                            {rooms.map((x) => (
-                                <p>{x}</p>
-                            ))}
-                        </div>
-                    ) : null}
+        <Box
+            style={{
+                backgroundImage: `url(${formBackground})`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+            }}
+            height="100vh"
+            width="100vw"
+        >
+            <Card
+                sx={{
+                    minWidth: '30%',
+                    maxheight: '50%',
+                    border: '2px solid black',
+                    borderRadius: '20px',
+                }}
+                variant="outlined"
+            >
+                <CardHeader
+                    title="My chat app"
+                    style={{
+                        textAlign: 'center',
+                        borderBottom: '1px solid #ddd',
+                    }}
+                />
+                <CardContent style={{ paddingBottom: '0px' }}>
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="name-input">
+                            Display name
+                        </InputLabel>
+                        <OutlinedInput
+                            id="name-input"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key?.toLowerCase() === 'enter') {
+                                    e.preventDefault()
+                                    handleOnSubmit()
+                                }
+                            }}
+                            label="Display name"
+                        />
+                    </FormControl>
                     <br />
-                    <label>Room</label>
-                    <input
-                        type="text"
-                        name="room"
-                        placeholder="Room"
-                        required
-                        onChange={(e) => setRoom(e.target.value)}
+                    <br />
+                    <Autocomplete
+                        freeSolo
+                        id="room-id"
+                        disableClearable
+                        options={rooms}
                         value={room}
+                        onChange={(e, value) => setRoom(value)}
+                        onInputChange={(e, value) => setRoom(value)}
+                        onKeyDown={(e) => {
+                            if (e.key?.toLowerCase() === 'enter') {
+                                e.preventDefault()
+                                handleOnSubmit()
+                            }
+                        }}
+                        renderInput={(params) => (
+                            <TextField {...params} label="Room" />
+                        )}
                     />
-                    <button>Join</button>
-                </form>
-            </div>
-        </div>
+                    <br />
+                </CardContent>
+                <CardActions
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginBottom: '10px',
+                    }}
+                >
+                    <Button
+                        variant="outlined"
+                        color="success"
+                        onClick={handleOnSubmit}
+                    >
+                        Join
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={() => {
+                            setRoom('')
+                            setUsername('')
+                        }}
+                    >
+                        Clear
+                    </Button>
+                </CardActions>
+            </Card>
+        </Box>
     )
 }

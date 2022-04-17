@@ -37,3 +37,14 @@ export const showNotification = (
 export const isCurrentUser = (first?: string, second?: string) => {
     return first?.trim()?.toLowerCase() === second?.trim()?.toLowerCase()
 }
+export const isURL = (string: string) => {
+    let url
+
+    try {
+        url = new URL(string)
+    } catch (_) {
+        return false
+    }
+
+    return url.protocol === 'http:' || url.protocol === 'https:'
+}
