@@ -25,7 +25,7 @@ export const Home: React.FunctionComponent = () => {
 
     const [username, setUsername] = React.useState('')
     const [room, setRoom] = React.useState('')
-    const [rooms, setRooms] = React.useState<string[]>(['abc', 'xyz'])
+    const [rooms, setRooms] = React.useState<string[]>([])
     const [roomsLoading, setRoomsLoading] = React.useState(true)
 
     React.useEffect(() => {
