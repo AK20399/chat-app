@@ -65,7 +65,8 @@ export const Messages: React.FunctionComponent<{
                     messagesRef.current?.scrollHeight -
                         messagesRef.current?.clientHeight -
                         messagesRef.current?.scrollTop -
-                        messagesRef.current.lastChild.lastChild.offsetHeight
+                        messagesRef.current?.lastChild?.lastChild
+                            ?.offsetHeight || 0
                 ) <= 50
             ) {
                 messagesRef.current?.scrollTo(

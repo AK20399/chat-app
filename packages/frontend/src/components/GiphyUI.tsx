@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import queryString from 'query-string'
 import { gifPayloadType, Giftype } from '../types'
-import _ from 'lodash'
+import _, { uniqBy } from 'lodash'
 import { useDebounce } from '../customHooks/useDebounce'
 import { Box } from '@mui/material'
 
@@ -14,18 +14,23 @@ export const GiphyUI: React.FunctionComponent<props> = ({
     gifText,
     onGifClick,
 }) => {
+    const gifsContainerRef = React.useRef<HTMLDivElement>(null)
     const [debounceGif, setDebounceGif] = useDebounce(gifText, 1000)
     const [gifs, setGifs] = React.useState<Giftype[] | []>([])
+    const [totalGifs, setTotalGifs] = React.useState(0)
     const [loading, setLoading] = React.useState(false)
 
-    const fetchGifs = () => {
+    const fetchGifs = (isReset: boolean = true) => {
         if (process.env.REACT_APP_GIPHY_KEY) {
             const payload: gifPayloadType = {
                 api_key: process.env.REACT_APP_GIPHY_KEY,
-                limit: 20,
+                limit: 25,
             }
             if (gifText) {
                 payload['q'] = gifText
+            }
+            if (!isReset) {
+                payload['offset'] = gifs.length
             }
             const query = queryString.stringify(payload)
             const url = gifText
@@ -35,10 +40,16 @@ export const GiphyUI: React.FunctionComponent<props> = ({
             fetch(url)
                 .then((res) => res.json())
                 .then((res) => {
-                    if (res?.data) {
-                        setGifs(
-                            res?.data?.filter((x: Giftype) => x.type === 'gif')
-                        )
+                    if (res?.meta?.status === 200 && res?.data) {
+                        if (totalGifs !== res?.pagination?.total_count)
+                            setTotalGifs(res?.pagination?.total_count)
+                        if (isReset) {
+                            setGifs(res?.data)
+                        } else {
+                            setGifs((prev) =>
+                                uniqBy([...prev, ...res?.data], 'id')
+                            )
+                        }
                         setLoading(false)
                     }
                 })
@@ -61,19 +72,33 @@ export const GiphyUI: React.FunctionComponent<props> = ({
 
     return (
         <Box
+            ref={gifsContainerRef}
             display="flex"
             flexWrap="wrap"
             maxHeight="300px"
             overflow="scroll"
             marginTop="10px"
+            onScroll={() => {
+                if (
+                    !loading &&
+                    gifs.length < totalGifs &&
+                    gifsContainerRef?.current
+                ) {
+                    if (
+                        gifsContainerRef.current.scrollHeight -
+                            gifsContainerRef.current.clientHeight -
+                            gifsContainerRef.current.scrollTop <
+                        80
+                    ) {
+                        console.log('fetched')
+                        fetchGifs(false)
+                    }
+                }
+            }}
             style={{ backgroundColor: 'black' }}
         >
-            {loading ? (
-                <Box style={{ minHeight: '300px', justifyContent: 'center' }}>
-                    <b style={{ color: 'white' }}>Loading...</b>
-                </Box>
-            ) : (
-                gifs &&
+            {gifs &&
+                gifs?.length > 0 &&
                 gifs.map((gif) => {
                     return (
                         <div key={gif.id} onClick={() => onGifClick(gif)}>
@@ -83,7 +108,11 @@ export const GiphyUI: React.FunctionComponent<props> = ({
                             />
                         </div>
                     )
-                })
+                })}
+            {loading && (
+                <Box style={{ minHeight: '300px', justifyContent: 'center' }}>
+                    <b style={{ color: 'white' }}>Loading...</b>
+                </Box>
             )}
         </Box>
     )

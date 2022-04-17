@@ -132,6 +132,8 @@ export interface User {
 
 export interface gifPayloadType {
     api_key: string
-    limit: number
+    limit?: number
+    offset?: number
+    rating?: string
     q?: string
 }
