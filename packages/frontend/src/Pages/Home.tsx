@@ -26,7 +26,6 @@ export const Home: React.FunctionComponent = () => {
     const [username, setUsername] = React.useState('')
     const [room, setRoom] = React.useState('')
     const [rooms, setRooms] = React.useState<string[]>([])
-    const [roomsLoading, setRoomsLoading] = React.useState(true)
 
     React.useEffect(() => {
         getRoomsList()
@@ -37,11 +36,9 @@ export const Home: React.FunctionComponent = () => {
             const tempRooms = await apiCall<string[]>(`${getAPIUrl()}/room`, {
                 method: 'GET',
             })
-            // setRooms(tempRooms)
+            setRooms(tempRooms)
         } catch (error) {
             showError(error as string)
-        } finally {
-            setRoomsLoading(false)
         }
     }
 
@@ -92,6 +89,12 @@ export const Home: React.FunctionComponent = () => {
                             id="name-input"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key?.toLowerCase() === 'enter') {
+                                    e.preventDefault()
+                                    handleOnSubmit()
+                                }
+                            }}
                             label="Display name"
                         />
                     </FormControl>
@@ -105,6 +108,12 @@ export const Home: React.FunctionComponent = () => {
                         value={room}
                         onChange={(e, value) => setRoom(value)}
                         onInputChange={(e, value) => setRoom(value)}
+                        onKeyDown={(e) => {
+                            if (e.key?.toLowerCase() === 'enter') {
+                                e.preventDefault()
+                                handleOnSubmit()
+                            }
+                        }}
                         renderInput={(params) => (
                             <TextField {...params} label="Room" />
                         )}

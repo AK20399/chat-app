@@ -3,6 +3,7 @@ import queryString from 'query-string'
 import { gifPayloadType, Giftype } from '../types'
 import _ from 'lodash'
 import { useDebounce } from '../customHooks/useDebounce'
+import { Box } from '@mui/material'
 
 interface props {
     gifText: string
@@ -38,12 +39,11 @@ export const GiphyUI: React.FunctionComponent<props> = ({
                         setGifs(
                             res?.data?.filter((x: Giftype) => x.type === 'gif')
                         )
+                        setLoading(false)
                     }
                 })
                 .catch((error) => {
                     console.error('Error:', error)
-                })
-                .finally(() => {
                     setLoading(false)
                 })
         } else {
@@ -60,9 +60,18 @@ export const GiphyUI: React.FunctionComponent<props> = ({
     }, [gifText])
 
     return (
-        <div className="gif">
+        <Box
+            display="flex"
+            flexWrap="wrap"
+            maxHeight="300px"
+            overflow="scroll"
+            marginTop="10px"
+            style={{ backgroundColor: 'black' }}
+        >
             {loading ? (
-                <b style={{ color: 'white' }}>Loading...</b>
+                <Box style={{ minHeight: '300px', justifyContent: 'center' }}>
+                    <b style={{ color: 'white' }}>Loading...</b>
+                </Box>
             ) : (
                 gifs &&
                 gifs.map((gif) => {
@@ -76,6 +85,6 @@ export const GiphyUI: React.FunctionComponent<props> = ({
                     )
                 })
             )}
-        </div>
+        </Box>
     )
 }
