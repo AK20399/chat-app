@@ -181,3 +181,14 @@ button:disabled {
     font-weight: 300;
     padding: 12px 24px 0 24px;
 }
+
+.gif {
+    background-color: black;
+    padding: 10px;
+    height: 30%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    overflow-y: scroll;
+    margin-bottom: 10px;
+}

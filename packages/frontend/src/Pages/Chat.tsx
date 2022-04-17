@@ -8,6 +8,7 @@ import {
     showNotification,
 } from '../utils/helper/helperFunctions'
 import { useLocation } from 'react-router-dom'
+import { GiphyUI } from '../components/GiphyUI'
 
 export const Chat: React.FunctionComponent = () => {
     const socket = React.useContext(SocketContext)
@@ -22,6 +23,7 @@ export const Chat: React.FunctionComponent = () => {
     const [users, setUsers] = React.useState<[] | Tuser[]>([])
     const [isTyping, setIsTyping] = React.useState(false)
     const [usersAreTyping, setUsersAreTyping] = React.useState<Tuser[] | []>([])
+    const [isShowGIF, setIsShowGif] = React.useState(false)
 
     React.useEffect(() => {
         if (socket) {
@@ -58,9 +60,6 @@ export const Chat: React.FunctionComponent = () => {
             {
                 ...socketData,
                 createdAt: moment(socketData.createdAt).format('h:mm a'),
-                type: socketData?.text?.includes('http')
-                    ? EmessageType.locationMessage
-                    : EmessageType.message,
             },
         ])
         if (messagesRef.current) {
@@ -68,14 +67,18 @@ export const Chat: React.FunctionComponent = () => {
         }
     }
 
-    const handleMessageSend = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
+    const handleMessageSend = (
+        event: React.FormEvent<HTMLFormElement> | undefined,
+        msg: string
+    ) => {
+        if (event) event.preventDefault()
 
         sendButtonRef.current?.setAttribute('disabled', 'disabled')
 
         if (socket?.connected) {
-            socket.emit('sendMessage', message, (error: string) => {
+            socket.emit('sendMessage', msg, (error: string) => {
                 sendButtonRef.current?.removeAttribute('disabled')
+                if (isShowGIF) setIsShowGif((prev) => !prev)
                 setMessage('')
                 messageInputRef.current?.focus()
 
@@ -138,6 +141,29 @@ export const Chat: React.FunctionComponent = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    const renderMessage = (text?: string) => {
+        if (text && typeof text === 'string') {
+            if (text?.includes('https://') && text.includes('giphy.com')) {
+                return (
+                    <p>
+                        <img src={text} />
+                    </p>
+                )
+            } else if (text.includes('https://google.com/maps')) {
+                return (
+                    <p>
+                        <a href={text} target="_blank" rel="noreferrer">
+                            My current location
+                        </a>
+                    </p>
+                )
+            } else {
+                return <p>{text || ''}</p>
+            }
+        }
+        return ''
+    }
+
     return (
         <div className="chat">
             <Sidebar room={room} users={users} />
@@ -145,28 +171,8 @@ export const Chat: React.FunctionComponent = () => {
                 <div id="messages" className="chat__messages" ref={messagesRef}>
                     {messagesData?.length > 0 &&
                         messagesData.map((data, i) => {
-                            if (data?.type === EmessageType.message) {
-                                return (
-                                    <div className="message" key={i}>
-                                        <p>
-                                            <span className="message__name">
-                                                {isCurrentUser(
-                                                    data?.username,
-                                                    (state as any)?.currentUser
-                                                )
-                                                    ? 'You'
-                                                    : data?.username || ''}
-                                            </span>
-                                            <span className="message__meta">
-                                                {data?.createdAt || ''}
-                                            </span>
-                                        </p>
-                                        <p>{data?.text || ''}</p>
-                                    </div>
-                                )
-                            }
                             return (
-                                <div key={i}>
+                                <div className="message" key={i}>
                                     <p>
                                         <span className="message__name">
                                             {isCurrentUser(
@@ -180,15 +186,7 @@ export const Chat: React.FunctionComponent = () => {
                                             {data?.createdAt || ''}
                                         </span>
                                     </p>
-                                    <p>
-                                        <a
-                                            href={data?.text}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                        >
-                                            My current location
-                                        </a>
-                                    </p>
+                                    {renderMessage(data?.text)}
                                 </div>
                             )
                         })}
@@ -220,7 +218,7 @@ export const Chat: React.FunctionComponent = () => {
                         )}
                         <div>
                             <form
-                                onSubmit={handleMessageSend}
+                                onSubmit={(e) => handleMessageSend(e, message)}
                                 id="sendMessageForm"
                             >
                                 <input
@@ -233,6 +231,24 @@ export const Chat: React.FunctionComponent = () => {
                                     value={message}
                                     ref={messageInputRef}
                                 />
+                                <div
+                                    style={{
+                                        cursor: 'pointer',
+                                        position: 'relative',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        right: 60,
+                                        backgroundColor: 'grey',
+                                        color: 'white',
+                                        padding: 10,
+                                    }}
+                                    onClick={() => {
+                                        setIsShowGif((prev) => !prev)
+                                    }}
+                                >
+                                    <b>GIF</b>
+                                </div>
                                 <button type="submit" ref={sendButtonRef}>
                                     Send
                                 </button>
@@ -249,6 +265,17 @@ export const Chat: React.FunctionComponent = () => {
                         </div>
                     </div>
                 </div>
+                {isShowGIF && (
+                    <GiphyUI
+                        gifText={message}
+                        onGifClick={(gif) => {
+                            handleMessageSend(
+                                undefined,
+                                gif.images.fixed_height.url
+                            )
+                        }}
+                    />
+                )}
             </div>
         </div>
     )
