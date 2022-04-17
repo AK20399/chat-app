@@ -36,13 +36,16 @@ export const Messages: React.FunctionComponent<{
         if (messagesData && messagesData?.length > 0) {
             autoScroll()
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [messagesData])
 
     React.useEffect(() => {
+        const messagesRefTemp = messagesRef.current
         messagesRef.current.addEventListener('scroll', onScroll)
         return () => {
-            messagesRef.current.removeEventListener('scroll', onScroll)
+            messagesRefTemp.removeEventListener('scroll', onScroll)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const onScroll = () => {
@@ -103,7 +106,7 @@ export const Messages: React.FunctionComponent<{
             if (text?.includes('https://') && text.includes('giphy.com')) {
                 return (
                     <p>
-                        <img src={text} />
+                        <img src={text} alt={text} />
                     </p>
                 )
             } else if (text.includes('https://google.com/maps')) {

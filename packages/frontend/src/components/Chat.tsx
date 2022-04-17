@@ -1,14 +1,8 @@
-import moment from 'moment'
-import React, { LegacyRef } from 'react'
+import React from 'react'
 import { GiphyUI } from '../components/GiphyUI'
-import { socketEvents, Tmessage, Tuser } from '../types'
+import { socketEvents, Tuser } from '../types'
 import { SocketContext } from '../utils/context/socket'
-import {
-    isCurrentUser,
-    isURL,
-    showNotification,
-} from '../utils/helper/helperFunctions'
-import { Box, IconButton, TextField, Typography } from '@mui/material'
+import { Box, IconButton, Typography } from '@mui/material'
 import {
     Send as SendIcon,
     MyLocation as MyLocationIcon,
@@ -20,9 +14,6 @@ export const Chat: React.FunctionComponent<{ currentUser: string }> = ({
     currentUser,
 }) => {
     const socket = React.useContext(SocketContext)
-    {
-        /* START  -------------------------------------------------------------- React states */
-    }
 
     const [isShowGIF, setIsShowGif] = React.useState(false)
     const [isTyping, setIsTyping] = React.useState(false)
@@ -33,13 +24,7 @@ export const Chat: React.FunctionComponent<{ currentUser: string }> = ({
     const messagesRef = React.useRef<HTMLDivElement>(null)
     const sendButtonRef = React.useRef<HTMLButtonElement>(null)
     const sendLocationButtonRef = React.useRef<HTMLButtonElement>(null)
-    {
-        /* END    -------------------------------------------------------------- React states */
-    }
 
-    {
-        /* START  -------------------------------------------------------------- Effects */
-    }
     React.useEffect(() => {
         if (socket?.connected) {
             messageInputRef && messageInputRef.current.focus()
@@ -63,13 +48,6 @@ export const Chat: React.FunctionComponent<{ currentUser: string }> = ({
             }
         }
     }, [message, isTyping, socket])
-    {
-        /* END    -------------------------------------------------------------- Effects */
-    }
-
-    {
-        /* START  -------------------------------------------------------------- Functions */
-    }
 
     const handleMessageSend = (
         msg?: string,
@@ -124,9 +102,6 @@ export const Chat: React.FunctionComponent<{ currentUser: string }> = ({
     }
     const handleUsersWhoAreTyping = (usersTyping: Tuser[]) => {
         setUsersAreTyping(usersTyping.filter((user) => user.id !== socket?.id))
-    }
-    {
-        /* END    -------------------------------------------------------------- Functions */
     }
 
     return (

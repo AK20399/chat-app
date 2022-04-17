@@ -16,7 +16,7 @@
         "install-frontend": "cd ./packages/frontend && npm install",
         "install-backend": "cd ./packages/backend && npm install",
         "postinstall": "npm run install-frontend && npm run install-backend",
-        "start": "cd ./packages/frontend && npm run build && cd ../../packages/backend && npm run start",
+        "start": "cd ./packages/backend && npm run start",
         "test": "lerna run test",
         "dev": "lerna run dev",
         "prepare": "husky install",

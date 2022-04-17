@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import queryString from 'query-string'
 import { gifPayloadType, Giftype } from '../types'
-import _, { uniqBy } from 'lodash'
+import { uniqBy } from 'lodash'
 import { useDebounce } from '../customHooks/useDebounce'
 import { Box } from '@mui/material'
 
@@ -64,10 +64,12 @@ export const GiphyUI: React.FunctionComponent<props> = ({
 
     useEffect(() => {
         fetchGifs()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debounceGif])
 
     useEffect(() => {
         setDebounceGif(gifText)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [gifText])
 
     return (
@@ -90,7 +92,6 @@ export const GiphyUI: React.FunctionComponent<props> = ({
                             gifsContainerRef.current.scrollTop <
                         80
                     ) {
-                        console.log('fetched')
                         fetchGifs(false)
                     }
                 }
@@ -105,6 +106,7 @@ export const GiphyUI: React.FunctionComponent<props> = ({
                             <img
                                 style={{ cursor: 'pointer' }}
                                 src={gif.images.fixed_height.url}
+                                alt={gif.title}
                             />
                         </div>
                     )

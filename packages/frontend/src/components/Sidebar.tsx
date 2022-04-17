@@ -5,7 +5,6 @@ import {
     Divider,
     List,
     ListItem,
-    ListItemIcon,
     AppBar,
     Box,
     CssBaseline,
