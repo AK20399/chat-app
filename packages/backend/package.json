@@ -5,8 +5,9 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-        "start": "node --max_old_space_size=2560 src/index.js",
-        "dev": "nodemon src/index.js"
+        "start": "node src/index.js",
+        "dev": "nodemon src/index.js",
+        "creteLintAndPrettierConfig": "yes|cp ../../.eslintrc.json ./.eslintrc.json && yes|cp ../../.prettierrc.json ./.prettierrc.json"
     },
     "author": "Aakash K Darji",
     "license": "MIT",

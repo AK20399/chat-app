@@ -17,6 +17,7 @@ import {
     removeUser,
     updateTypingValue,
 } from './utils/users.mjs'
+import { _log } from './utils/customLogger.mjs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -137,5 +138,5 @@ app.get('/room', (req, res) => {
 })
 
 server.listen(process.env.PORT, () => {
-    console.log(`Server started on port ${process.env.PORT}`)
+    _log(`Server started on port ${process.env.PORT}`)
 })

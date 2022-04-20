@@ -13,12 +13,14 @@ export const addUser = ({ id, username, room }) => {
     }
 
     // check for existing user
-    const existingUser = users.find((user) => (user.username === username && user.room === room))
+    const existingUser = users.find(
+        (user) => user.username === username && user.room === room
+    )
 
     // validate username
     if (existingUser) {
         return {
-            error: "Username is in use!"
+            error: 'Username is in use!',
         }
     }
 
@@ -39,8 +41,7 @@ export const removeUser = (id) => {
 }
 
 // get user
-export const getUser = (id) =>
-    users.find((x) => x.id === id)
+export const getUser = (id) => users.find((x) => x.id === id)
 
 // get users in room
 export const getUsersInRoom = (room) => {
@@ -62,5 +63,7 @@ export const updateTypingValue = (id, isTyping) => {
     if (index >= 0) {
         users[index]['isTyping'] = isTyping
     }
-    return users.filter((user) => user.room === users[index].room && user?.isTyping)
+    return users.filter(
+        (user) => user.room === users[index].room && user?.isTyping
+    )
 }

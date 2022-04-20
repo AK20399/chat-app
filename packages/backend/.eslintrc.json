@@ -10,7 +10,7 @@
     },
     "rules": {
         "no-unused-vars": "error",
-        "no-console": "off",
+        "no-console": "error",
         "no-underscore-dangle": "off"
     }
 }
