@@ -9,9 +9,10 @@ export const useDebounce = (obj: any = null, wait: number = 1000) => {
     }
 
     const debounce = useCallback(
-        _.debounce((_prop: string) => {
-            setState(_prop)
-        }, wait),
+        (_prop) =>
+            _.debounce((_prop: string) => {
+                setState(_prop)
+            }, wait),
         []
     )
 
