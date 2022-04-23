@@ -13,6 +13,7 @@ export const useDebounce = (obj: any = null, wait: number = 1000) => {
             _.debounce((_prop: string) => {
                 setState(_prop)
             }, wait),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         []
     )
 
