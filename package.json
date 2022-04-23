@@ -21,13 +21,13 @@
   "scripts": {
     "install-frontend": "cd ./packages/frontend && npm install",
     "install-backend": "cd ./packages/backend && npm install",
-    "postinstall": "npm run install-frontend && npm run install-backend && cd ./packages/frontend && npm run build",
+    "postinstall": "npm run install-frontend && npm run install-backend",
+    "build": "cd ./packages/frontend && npm run build",
     "start": " cd ./packages/backend && npm run start",
     "dev": "lerna run dev",
     "prepare": "husky install",
     "clean": "lerna clean",
-    "bootstrap": "lerna bootstrap",
-    "creteLintAndPrettierConfig": "lerna run creteLintAndPrettierConfig"
+    "bootstrap": "lerna bootstrap"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,css}": [

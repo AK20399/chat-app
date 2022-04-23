@@ -29,8 +29,7 @@
         "dev": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
-        "eject": "react-scripts eject",
-        "creteLintAndPrettierConfig": "yes|cp ../../.eslintrc.json ./.eslintrc.json && yes|cp ../../.prettierrc.json ./.prettierrc.json"
+        "eject": "react-scripts eject"
     },
     "eslintConfig": {
         "extends": [

@@ -14,7 +14,11 @@
         "project": ["packages/frontend/tsconfig.json"]
     },
     "plugins": ["react", "@typescript-eslint"],
-    "rules": {},
+    "rules": {
+        "no-unused-vars": "error",
+        "no-console": "error",
+        "no-underscore-dangle": "off"
+    },
     "settings": {
         "react": {
             "version": "detect"
